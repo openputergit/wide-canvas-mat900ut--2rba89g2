@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Student Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            transition: all 0.3s;
+        }
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Loading Animation -->
+    <div class="loading">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+    </div>
+
+    <!-- Login Section -->
+    <div id="loginSection" class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h2 class="text-2xl font-bold mb-6 text-center text-blue-600">College Portal Login</h2>
+            <div class="space-y-4">
+                <select id="userType" class="w-full p-2 border rounded">
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <input type="text" id="username" placeholder="Username" class="w-full p-2 border rounded">
+                <input type="password" id="password" placeholder="Password" class="w-full p-2 border rounded">
+                <button onclick="login()" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden">
+        <!-- Sidebar -->
+        <div class="sidebar fixed top-0 left-0 h-full w-64 bg-blue-600 text-white p-4 z-50">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold">Student Portal</h2>
+                <button class="md:hidden" onclick="toggleSidebar()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <nav class="space-y-4">
+                <a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded" onclick="showSection('attendance')">
+                    <i class="bi bi-calendar-check mr-2"></i>Attendance
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded" onclick="showSection('examSchedule')">
+                    <i class="bi bi-calendar-event mr-2"></i>Exam Schedule
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded" onclick="showSection('timetable')">
+                    <i class="bi bi-clock mr-2"></i>Time Table
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded" onclick="showSection('pyq')">
+                    <i class="bi bi-file-text mr-2"></i>Previous Year Papers
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded" onclick="showSection('results')">
+                    <i class="bi bi-graph-up mr-2"></i>Results
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded" onclick="showSection('events')">
+                    <i class="bi bi-calendar2-event mr-2"></i>Events
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded" onclick="showSection('faculty')">
+                    <i class="bi bi-person-lines-fill mr-2"></i>Faculty Details
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded" onclick="showSection('profile')">
+                    <i class="bi bi-person-circle mr-2"></i>Profile
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64 p-8">
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <!-- Dynamic Content Sections -->
+            <div id="attendance" class="section hidden">
+                <h2 class="text-2xl font-bold mb-6">Attendance Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold mb-4">Today's Attendance</h3>
+                        <div class="flex justify-between items-center">
+                            <div class="text-4xl font-bold text-blue-600">85%</div>
+                            <div class="text-gray-600">Present: 5/6 Classes</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold mb-4">Monthly Overview</h3>
+                        <div class="h-48 bg-gray-100 rounded flex items-center justify-center">
+                            [Attendance Chart Placeholder]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pyq" class="section hidden">
+                <h2 class="text-2xl font-bold mb-6">Previous Year Question Papers</h2>
+                <div class="space-y-4">
+                    <select id="course" class="w-full md:w-64 p-2 border rounded">
+                        <option value="">Select Course</option>
+                        <option value="bba">BBA</option>
+                        <option value="bca">BCA</option>
+                    </select>
+                    <select id="semester" class="w-full md:w-64 p-2 border rounded">
+                        <option value="">Select Semester</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                    </select>
+                    <select id="examType" class="w-full md:w-64 p-2 border rounded">
+                        <option value="">Select Exam Type</option>
+                        <option value="sessional1">Sessional 1</option>
+                        <option value="sessional2">Sessional 2</option>
+                        <option value="put">PUT Exam</option>
+                    </select>
+                    <button onclick="requestPaper()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Request Question Paper
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add other sections similarly -->
+        </div>
+    </div>
+
+    <script>
+        // Toggle Sidebar
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+
+        // Show/Hide Sections
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        // Login Function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const userType = document.getElementById('userType').value;
+
+            if (username && password) {
+                document.querySelector('.loading').style.display = 'block';
+                
+                // Simulate API call
+                setTimeout(() => {
+                    document.querySelector('.loading').style.display = 'none';
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    showSection('attendance'); // Show default section
+                }, 1500);
+            }
+        }
+
+        // Request Question Paper
+        function requestPaper() {
+            const course = document.getElementById('course').value;
+            const semester = document.getElementById('semester').value;
+            const examType = document.getElementById('examType').value;
+
+            if (course && semester && examType) {
+                alert('Question paper request submitted! You will be notified once verified.');
+            } else {
+                alert('Please select all fields');
+            }
+        }
+
+        // MongoDB Integration Example
+        async function fetchAttendance() {
+            try {
+                const response = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/mongodb', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer g0e6IVLgZ8dwZtdnc1bUc6kGVn73',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        appSlug: 'college-portal-123456',
+                        action: 'read',
+                        collection: 'attendance',
+                        conditions: {
+                            studentId: 'current_student_id'
+                        }
+                    })
+                });
+                const data = await response.json();
+                // Update UI with attendance data
+            } catch (error) {
+                console.error('Error fetching attendance:', error);
+            }
+        }
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
